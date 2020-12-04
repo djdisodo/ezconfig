@@ -36,7 +36,7 @@ impl Config {
 	}
 
 	pub fn load(&mut self) {
-		self.value = serde_yaml::from_str(&std::fs::read_to_string(self.path).unwrap()).unwrap();
+		self.value = serde_yaml::from_str(&std::fs::read_to_string(&self.path).unwrap()).unwrap();
 	}
 
 	pub fn save(&mut self) {
