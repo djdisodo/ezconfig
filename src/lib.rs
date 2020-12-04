@@ -1,6 +1,5 @@
 use std::path::PathBuf;
-use serde_yaml::Value;
-use std::ops::{Deref, DerefMut};
+use serde_yaml::{Value, Mapping};
 
 #[cfg(test)]
 mod tests {
@@ -14,14 +13,14 @@ mod tests {
 #[derive(Debug, Clone)]
 pub struct Config {
 	pub path: PathBuf,
-	value: Value
+	mapping: Mapping
 }
 
 impl Config {
 	pub fn new(path: PathBuf) -> Self {
 		Self {
 			path,
-			value: Value::Null
+			mapping: Mapping::new()
 		}
 	}
 
@@ -31,29 +30,32 @@ impl Config {
 			if !path_parent.exists() {
 				std::fs::create_dir_all(path_parent).unwrap();
 			}
-			std::fs::write(&self.path, serde_yaml::to_string(&Value::Null).unwrap()).unwrap();
+			std::fs::write(&self.path, serde_yaml::to_string(&Mapping::new()).unwrap()).unwrap();
 		}
 	}
 
 	pub fn load(&mut self) {
-		self.value = serde_yaml::from_str(&std::fs::read_to_string(&self.path).unwrap()).unwrap();
+		self.mapping = serde_yaml::from_str(&std::fs::read_to_string(&self.path).unwrap()).unwrap();
 	}
 
 	pub fn save(&mut self) {
-		std::fs::write(&self.path, serde_yaml::to_string(&self.value).unwrap()).unwrap();
+		std::fs::write(&self.path, serde_yaml::to_string(&self.mapping).unwrap()).unwrap();
 	}
-}
 
-impl Deref for Config {
-	type Target = Value;
-
-	fn deref(&self) -> &Self::Target {
-		&self.value
+	pub fn set_default(&mut self, key: &str, value: Value){
+		let key = Value::String(key.to_owned());
+		if self.mapping.get(&key).is_none() {
+			self.mapping.insert(key, value);
+		}
 	}
-}
 
-impl DerefMut for Config {
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		&mut self.value
+	pub fn get(&mut self, key: &str) -> Option<&Value> {
+		let key = Value::String(key.to_owned());
+		self.mapping.get(&key)
+	}
+
+	pub fn set(&mut self, key: &str, value: Value) {
+		let key = Value::String(key.to_owned());
+		self.mapping.insert(key, value);
 	}
 }

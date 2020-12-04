@@ -1,6 +1,6 @@
 [package]
 name = "ezconfig"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["djdisodo <djdisodo@gmail.com>"]
 edition = "2018"
 description = "easy and simple to use; without error handling"
@@ -10,5 +10,4 @@ repository = "https://github.com/djdisodo/ezconfig"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = "1.0"
 serde_yaml = "0.8"
