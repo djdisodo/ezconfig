@@ -49,7 +49,7 @@ impl Config {
 		}
 	}
 
-	pub fn get(&mut self, key: &str) -> Option<&Value> {
+	pub fn get(&self, key: &str) -> Option<&Value> {
 		let key = Value::String(key.to_owned());
 		self.mapping.get(&key)
 	}

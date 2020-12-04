@@ -1,6 +1,6 @@
 [package]
 name = "ezconfig"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["djdisodo <djdisodo@gmail.com>"]
 edition = "2018"
 description = "easy and simple to use; without error handling"
