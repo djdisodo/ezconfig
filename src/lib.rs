@@ -26,7 +26,7 @@ impl Config {
 	}
 
 	pub fn init(&mut self) {
-		if !path.exists() {
+		if !self.path.exists() {
 			let path_parent = self.path.parent().unwrap();
 			if !path_parent.exists() {
 				std::fs::create_dir_all(path_parent).unwrap();
