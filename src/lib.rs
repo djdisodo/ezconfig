@@ -13,38 +13,34 @@ mod tests {
 
 #[derive(Debug, Clone)]
 pub struct Config {
-	pub path: String,
+	pub path: PathBuf,
 	value: Value
 }
 
 impl Config {
-	pub const fn new(path: String) -> Self {
+	pub fn new(path: PathBuf) -> Self {
 		Self {
 			path,
 			value: Value::Null
 		}
 	}
 
-	pub fn init(&mut self) -> PathBuf {
-		let path = PathBuf::from(&self.path);
+	pub fn init(&mut self) {
 		if !path.exists() {
-			let path_parent = path.parent().unwrap();
+			let path_parent = self.path.parent().unwrap();
 			if !path_parent.exists() {
 				std::fs::create_dir_all(path_parent).unwrap();
 			}
-			std::fs::write(&path, serde_yaml::to_string(&Value::Null).unwrap()).unwrap();
+			std::fs::write(&self.path, serde_yaml::to_string(&Value::Null).unwrap()).unwrap();
 		}
-		path
 	}
 
 	pub fn load(&mut self) {
-		let path = self.init();
-		self.value = serde_yaml::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+		self.value = serde_yaml::from_str(&std::fs::read_to_string(self.path).unwrap()).unwrap();
 	}
 
 	pub fn save(&mut self) {
-		let path = self.init();
-		std::fs::write(&path, serde_yaml::to_string(&self.value).unwrap()).unwrap();
+		std::fs::write(&self.path, serde_yaml::to_string(&self.value).unwrap()).unwrap();
 	}
 }
 
